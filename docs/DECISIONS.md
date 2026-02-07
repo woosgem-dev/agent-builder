@@ -78,4 +78,19 @@ version: string (선택)
 
 ---
 
-*결정: Admin (Woosgem) + Senior Team*
+## 테스트 전략
+
+### E2E / Visual Testing
+- **Playwright** 사용
+- 페이지별 스크린샷 테스트
+- 주요 유저 플로우 테스트
+- woosgem DS 시각적 검증
+
+### 개발 루프
+```
+코드 작성 → Playwright 테스트 → DS 문제 발견 → DS 수정 → 반복
+```
+
+---
+
+*결정: Admin (WooSGem) + Senior Team*
