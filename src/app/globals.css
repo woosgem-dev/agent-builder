@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* woosgem DS 스타일은 여기에 import 예정 */
+/* @import '@woosgem/ds-styles/theme.css'; */
+
+:root {
+  --foreground: #171717;
+  --background: #ffffff;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}

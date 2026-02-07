@@ -5,6 +5,8 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-blue.svg)](https://www.typescriptlang.org/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE)
 
+[English](./README.en.md) | **한국어**
+
 ## 비전
 
 개발자 인접 직군(기획/디자인/QA/PM)도 쉽게 AI 스킬을 발견하고 사용할 수 있는 플랫폼
@@ -31,13 +33,11 @@
 
 ## 팀
 
-| 역할 | 담당 |
-|------|------|
-| Admin | Woosgem |
-| Backend | BE-Senior |
-| Frontend | Web-Senior |
-| Database | DBA |
-| Infra | DevOps |
+**Core Team**
+- 🧠 **WooSGem** — Creator & Architect
+- ⚡ **Thrall** — AI Engineer & Documentor
+
+자세한 팀 구성은 [TEAM.md](./TEAM.md) 참조
 
 ## 시작하기
 
@@ -55,3 +55,7 @@ pnpm build
 ## 라이센스
 
 MIT
+
+---
+
+Made with ❤️ by WooSGem & Thrall ⚡

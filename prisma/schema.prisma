@@ -1,0 +1,133 @@
+// SkillHub Database Schema
+// Based on ARCHITECTURE.md
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================
+// Users (GitHub OAuth)
+// ============================================
+model User {
+  id        String   @id @default(uuid())
+  githubId  Int      @unique @map("github_id")
+  username  String
+  avatarUrl String?  @map("avatar_url")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  skills  Skill[]
+  ratings Rating[]
+
+  @@map("users")
+}
+
+// ============================================
+// Skills
+// ============================================
+model Skill {
+  id          String   @id @default(uuid())
+  authorId    String   @map("author_id")
+  name        String
+  description String
+  version     String
+  githubUrl   String   @map("github_url")
+
+  // Location (Layer 2)
+  locationType  String  @default("github") @map("location_type")
+  locationOwner String? @map("location_owner")
+  locationRepo  String? @map("location_repo")
+  locationPath  String? @map("location_path")
+  locationRef   String? @map("location_ref")
+
+  // Runtime (Layer 2)
+  runtimeClaudeCode String? @map("runtime_claude_code")
+  runtimeMinModel   String? @map("runtime_min_model")
+  runtimeTools      Json?   @map("runtime_tools")
+
+  // Resources (Layer 2)
+  baseTokens  Int?    @map("base_tokens")
+  contextHint String? @map("context_hint")
+
+  // Extended (Layer 3)
+  useCases    Json?   @map("use_cases")
+  targetRoles Json?   @map("target_roles")
+  license     String?
+  status      String  @default("active")
+  icon        String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  author   User       @relation(fields: [authorId], references: [id])
+  tags     SkillTag[]
+  ratings  Rating[]
+  ranking  Ranking?
+
+  @@map("skills")
+}
+
+// ============================================
+// Tags
+// ============================================
+model Tag {
+  id    String @id @default(uuid())
+  name  String @unique
+  count Int    @default(0)
+
+  skills SkillTag[]
+
+  @@map("tags")
+}
+
+// ============================================
+// Skill-Tag Relation
+// ============================================
+model SkillTag {
+  skillId String @map("skill_id")
+  tagId   String @map("tag_id")
+
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([skillId, tagId])
+  @@map("skill_tags")
+}
+
+// ============================================
+// Ratings
+// ============================================
+model Rating {
+  id        String   @id @default(uuid())
+  skillId   String   @map("skill_id")
+  userId    String   @map("user_id")
+  score     Int // 1-5
+  comment   String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([skillId, userId])
+  @@map("ratings")
+}
+
+// ============================================
+// Rankings (computed, cached)
+// ============================================
+model Ranking {
+  skillId    String   @id @map("skill_id")
+  eloScore   Int      @default(1000) @map("elo_score")
+  rank       Int?
+  usageCount Int      @default(0) @map("usage_count")
+  avgRating  Float?   @map("avg_rating")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@map("rankings")
+}
