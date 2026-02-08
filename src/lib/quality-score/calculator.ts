@@ -1,5 +1,4 @@
-// Grade enum (matches Prisma schema)
-export type Grade = 'S' | 'A' | 'B' | 'C' | 'D';
+import { Grade } from '@prisma/client';
 
 /**
  * Quality Score Calculator

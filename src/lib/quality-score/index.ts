@@ -1,12 +1,13 @@
 export {
   calculateQualityScore,
   estimateTokenCost,
-  type Grade,
   type Frontmatter,
   type ScoreBreakdown,
   type ImprovementTip,
   type QualityAnalysis,
 } from './calculator';
+
+export { Grade } from '@prisma/client';
 
 export {
   parseFrontmatter,
