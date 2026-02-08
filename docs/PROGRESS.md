@@ -1,6 +1,18 @@
 # SkillHub 개발 진행 상황
 
-> 마지막 업데이트: 2026-02-08 13:30 KST
+> 마지막 업데이트: 2026-02-08 14:40 KST
+
+## ⚠️ 방향 재검토 중
+
+**기존 방향:** 스킬 호스팅 플랫폼
+**새 방향 검토:** 어그리게이터 / SkillFinder
+- 기존 스킬 소스 크롤링 (skillstore.io, clawhub, GitHub)
+- Frontmatter 분석으로 품질 평가
+- 원본 링크 제공, 중복 제거
+
+→ Phase 1 완료 후 pivot 결정 예정
+
+---
 
 ## 현재 Phase: Phase 1 (기반 + 분석 시스템)
 
@@ -128,6 +140,13 @@ Tables:   12개
 ---
 
 ## 📝 최근 변경사항
+
+### 2026-02-08 (Day 2 마무리)
+- **방향 재검토** — 어그리게이터/SkillFinder 방향 논의
+- **DS A11y 개선**
+  - Input: `aria-invalid` 자동 설정
+  - Textarea: `aria-invalid` 타입 수정
+  - Button: `aria-busy` 추가 (loading 상태)
 
 ### 2026-02-08 (Day 2 오후)
 - **Skills CRUD API 완성**
