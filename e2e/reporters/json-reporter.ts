@@ -12,7 +12,7 @@ import * as path from 'path';
 interface TestResultData {
   name: string;
   file: string;
-  status: 'passed' | 'failed' | 'skipped' | 'timedOut';
+  status: 'passed' | 'failed' | 'skipped' | 'timedOut' | 'interrupted';
   duration: number;
   error?: string;
   retry: number;
