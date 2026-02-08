@@ -1,13 +1,13 @@
 # SkillHub 개발 진행 상황
 
-> 마지막 업데이트: 2026-02-08 11:35 KST
+> 마지막 업데이트: 2026-02-08 11:45 KST
 
 ## 현재 Phase: Phase 1 (기반 + 분석 시스템)
 
-### 전체 진행률: 60%
+### 전체 진행률: 65%
 
 ```
-[████████████░░░░░░░░] 60%
+[█████████████░░░░░░░] 65%
 ```
 
 ---
@@ -40,6 +40,15 @@
 | Analyze API | `src/app/api/analyze/route.ts` | POST /api/analyze |
 | Analyze URL API | `src/app/api/analyze/url/route.ts` | POST /api/analyze/url |
 | NextAuth Route | `src/app/api/auth/[...nextauth]/route.ts` | OAuth 핸들러 |
+
+### 테스트 환경
+| 항목 | 파일 | 설명 |
+|------|------|------|
+| Playwright 설정 | `playwright.config.ts` | E2E 테스트 환경 |
+| 홈페이지 테스트 | `e2e/home.spec.ts` | 기본 UI 테스트 |
+| 인증 테스트 | `e2e/auth.spec.ts` | OAuth 플로우 |
+| API 테스트 | `e2e/api/analyze.spec.ts` | Analyze API |
+| 테스트 데이터 | `e2e/fixtures/frontmatter.ts` | S/A/B/C/D 등급별 예시 |
 
 ---
 
