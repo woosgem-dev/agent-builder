@@ -4,10 +4,10 @@
 
 ## 현재 Phase: Phase 1 (기반 + 분석 시스템)
 
-### 전체 진행률: 65%
+### 전체 진행률: 70%
 
 ```
-[█████████████░░░░░░░] 65%
+[██████████████░░░░░░] 70%
 ```
 
 ---
@@ -49,6 +49,8 @@
 | 인증 테스트 | `e2e/auth.spec.ts` | OAuth 플로우 |
 | API 테스트 | `e2e/api/analyze.spec.ts` | Analyze API |
 | 테스트 데이터 | `e2e/fixtures/frontmatter.ts` | S/A/B/C/D 등급별 예시 |
+| 커스텀 리포터 | `e2e/reporters/json-reporter.ts` | JSON 결과 출력 |
+| E2E 대시보드 | `e2e-dashboard/index.html` | 테스트 결과 시각화 |
 
 ---
 

@@ -24,6 +24,7 @@ export default defineConfig({
   reporter: [
     ['html', { outputFolder: 'playwright-report' }],
     ['list'],
+    ['./e2e/reporters/json-reporter.ts'],
   ],
 
   // Shared settings for all the projects below

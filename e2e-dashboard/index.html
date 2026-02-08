@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SkillHub E2E 테스트 대시보드</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .status-passed { color: #22c55e; }
+    .status-failed { color: #ef4444; }
+    .status-skipped { color: #f59e0b; }
+    .bg-passed { background-color: #dcfce7; }
+    .bg-failed { background-color: #fee2e2; }
+    .bg-skipped { background-color: #fef3c7; }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <div class="container mx-auto px-4 py-8 max-w-6xl">
+    <!-- Header -->
+    <header class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-800 flex items-center gap-2">
+        🧪 SkillHub E2E 테스트 대시보드
+      </h1>
+      <p class="text-gray-500 mt-1" id="timestamp">마지막 실행: -</p>
+    </header>
+
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-sm text-gray-500">총 테스트</div>
+        <div class="text-2xl font-bold text-gray-800" id="total">-</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-sm text-gray-500">✅ 성공</div>
+        <div class="text-2xl font-bold text-green-600" id="passed">-</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-sm text-gray-500">❌ 실패</div>
+        <div class="text-2xl font-bold text-red-600" id="failed">-</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-sm text-gray-500">⏭️ 스킵</div>
+        <div class="text-2xl font-bold text-yellow-600" id="skipped">-</div>
+      </div>
+      <div class="bg-white rounded-lg shadow p-4">
+        <div class="text-sm text-gray-500">📈 성공률</div>
+        <div class="text-2xl font-bold text-blue-600" id="passRate">-</div>
+      </div>
+    </div>
+
+    <!-- Charts Row -->
+    <div class="grid md:grid-cols-2 gap-6 mb-8">
+      <!-- Donut Chart -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">테스트 결과 분포</h2>
+        <div class="w-64 mx-auto">
+          <canvas id="donutChart"></canvas>
+        </div>
+      </div>
+
+      <!-- History Chart -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-lg font-semibold mb-4">성공률 추이 (최근 10회)</h2>
+        <canvas id="historyChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Environment Info -->
+    <div class="bg-white rounded-lg shadow p-6 mb-8">
+      <h2 class="text-lg font-semibold mb-4">🖥️ 실행 환경</h2>
+      <div class="grid md:grid-cols-3 gap-4 text-sm">
+        <div>
+          <span class="text-gray-500">브라우저:</span>
+          <span class="font-medium" id="browser">-</span>
+        </div>
+        <div>
+          <span class="text-gray-500">Base URL:</span>
+          <span class="font-medium" id="baseURL">-</span>
+        </div>
+        <div>
+          <span class="text-gray-500">Node.js:</span>
+          <span class="font-medium" id="nodeVersion">-</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Test Suites -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-lg font-semibold mb-4">📋 테스트 스위트</h2>
+      <div id="suites" class="space-y-4">
+        <p class="text-gray-500">테스트 결과를 불러오는 중...</p>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-gray-400 text-sm">
+      Made with ❤️ by WooSGem & Thrall ⚡
+    </footer>
+  </div>
+
+  <script>
+    let donutChart = null;
+    let historyChart = null;
+
+    async function loadResults() {
+      try {
+        const response = await fetch('./results.json');
+        if (!response.ok) throw new Error('No results found');
+        const data = await response.json();
+        renderDashboard(data);
+      } catch (error) {
+        document.getElementById('suites').innerHTML = `
+          <div class="text-center py-8">
+            <p class="text-gray-500 mb-2">테스트 결과가 없습니다.</p>
+            <p class="text-sm text-gray-400">pnpm test:e2e 실행 후 새로고침하세요.</p>
+          </div>
+        `;
+      }
+
+      // Load history
+      try {
+        const historyResponse = await fetch('./history.json');
+        if (historyResponse.ok) {
+          const history = await historyResponse.json();
+          renderHistoryChart(history);
+        }
+      } catch (e) {
+        // No history yet
+      }
+    }
+
+    function renderDashboard(data) {
+      // Summary
+      document.getElementById('timestamp').textContent = 
+        `마지막 실행: ${new Date(data.timestamp).toLocaleString('ko-KR')} (${(data.duration / 1000).toFixed(1)}s)`;
+      document.getElementById('total').textContent = data.summary.total;
+      document.getElementById('passed').textContent = data.summary.passed;
+      document.getElementById('failed').textContent = data.summary.failed;
+      document.getElementById('skipped').textContent = data.summary.skipped;
+      document.getElementById('passRate').textContent = `${data.summary.passRate}%`;
+
+      // Environment
+      document.getElementById('browser').textContent = data.environment.browser;
+      document.getElementById('baseURL').textContent = data.environment.baseURL;
+      document.getElementById('nodeVersion').textContent = data.environment.node;
+
+      // Donut Chart
+      renderDonutChart(data.summary);
+
+      // Suites
+      renderSuites(data.suites);
+    }
+
+    function renderDonutChart(summary) {
+      const ctx = document.getElementById('donutChart').getContext('2d');
+      
+      if (donutChart) donutChart.destroy();
+      
+      donutChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+          labels: ['성공', '실패', '스킵'],
+          datasets: [{
+            data: [summary.passed, summary.failed, summary.skipped],
+            backgroundColor: ['#22c55e', '#ef4444', '#f59e0b'],
+            borderWidth: 0,
+          }]
+        },
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'bottom',
+            }
+          },
+          cutout: '60%',
+        }
+      });
+    }
+
+    function renderHistoryChart(history) {
+      const ctx = document.getElementById('historyChart').getContext('2d');
+      const recentHistory = history.slice(-10);
+      
+      if (historyChart) historyChart.destroy();
+      
+      historyChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: recentHistory.map((_, i) => `#${history.length - recentHistory.length + i + 1}`),
+          datasets: [{
+            label: '성공률 (%)',
+            data: recentHistory.map(h => h.summary.passRate),
+            borderColor: '#3b82f6',
+            backgroundColor: 'rgba(59, 130, 246, 0.1)',
+            fill: true,
+            tension: 0.3,
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              min: 0,
+              max: 100,
+            }
+          },
+          plugins: {
+            legend: {
+              display: false,
+            }
+          }
+        }
+      });
+    }
+
+    function renderSuites(suites) {
+      const container = document.getElementById('suites');
+      
+      if (!suites || suites.length === 0) {
+        container.innerHTML = '<p class="text-gray-500">테스트 스위트가 없습니다.</p>';
+        return;
+      }
+
+      container.innerHTML = suites.map(suite => `
+        <details class="border rounded-lg" open>
+          <summary class="px-4 py-3 cursor-pointer hover:bg-gray-50 flex justify-between items-center">
+            <span class="font-medium">${escapeHtml(suite.name)}</span>
+            <div class="flex gap-2 text-sm">
+              <span class="status-passed">✅ ${suite.passed}</span>
+              <span class="status-failed">❌ ${suite.failed}</span>
+              <span class="status-skipped">⏭️ ${suite.skipped}</span>
+            </div>
+          </summary>
+          <div class="px-4 pb-4">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="text-left text-gray-500">
+                  <th class="py-2">테스트</th>
+                  <th class="py-2 w-20">상태</th>
+                  <th class="py-2 w-24 text-right">시간</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${suite.tests.map(test => `
+                  <tr class="border-t ${test.status === 'failed' ? 'bg-failed' : ''}">
+                    <td class="py-2">
+                      ${escapeHtml(test.name)}
+                      ${test.error ? `<div class="text-xs text-red-500 mt-1">${escapeHtml(test.error.substring(0, 100))}...</div>` : ''}
+                    </td>
+                    <td class="py-2">
+                      <span class="status-${test.status}">
+                        ${test.status === 'passed' ? '✅' : test.status === 'failed' ? '❌' : '⏭️'}
+                      </span>
+                    </td>
+                    <td class="py-2 text-right text-gray-500">${test.duration}ms</td>
+                  </tr>
+                `).join('')}
+              </tbody>
+            </table>
+          </div>
+        </details>
+      `).join('');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    // Auto-refresh every 30 seconds
+    loadResults();
+    setInterval(loadResults, 30000);
+  </script>
+</body>
+</html>
