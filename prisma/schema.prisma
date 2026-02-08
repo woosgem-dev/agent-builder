@@ -1,5 +1,5 @@
 // SkillHub Database Schema
-// Based on ARCHITECTURE.md
+// Based on PRD v0.3 (2026-02-08)
 
 generator client {
   provider = "prisma-client-js"
@@ -11,123 +11,250 @@ datasource db {
 }
 
 // ============================================
-// Users (GitHub OAuth)
+// User (GitHub OAuth)
 // ============================================
-model User {
-  id        String   @id @default(uuid())
-  githubId  Int      @unique @map("github_id")
-  username  String
-  avatarUrl String?  @map("avatar_url")
-  createdAt DateTime @default(now()) @map("created_at")
 
-  skills  Skill[]
-  ratings Rating[]
+model User {
+  id        String   @id @default(cuid())
+  githubId  String   @unique @map("github_id")
+  username  String   @unique
+  email     String?
+  avatarUrl String?  @map("avatar_url")
+
+  skills    Skill[]
+  reviews   Review[]
+  bookmarks Bookmark[]
+  installs  Install[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("users")
 }
 
 // ============================================
-// Skills
+// Skill
 // ============================================
-model Skill {
-  id          String   @id @default(uuid())
-  authorId    String   @map("author_id")
-  name        String
-  description String
-  version     String
-  githubUrl   String   @map("github_url")
 
-  // Location (Layer 2)
-  locationType  String  @default("github") @map("location_type")
-  locationOwner String? @map("location_owner")
-  locationRepo  String? @map("location_repo")
-  locationPath  String? @map("location_path")
-  locationRef   String? @map("location_ref")
+model Skill {
+  id          String @id @default(cuid())
+
+  // Core (Layer 1)
+  name        String
+  description String @db.Text
+  version     String
+
+  // Author
+  authorId String @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id])
+
+  // Location (Layer 2) - GitHub source
+  sourceType  String @default("github") @map("source_type")
+  sourceOwner String @map("source_owner")
+  sourceRepo  String @map("source_repo")
+  sourcePath  String @map("source_path")
+  sourceRef   String @default("main") @map("source_ref")
 
   // Runtime (Layer 2)
-  runtimeClaudeCode String? @map("runtime_claude_code")
-  runtimeMinModel   String? @map("runtime_min_model")
-  runtimeTools      Json?   @map("runtime_tools")
-
-  // Resources (Layer 2)
+  minModel    String? @map("min_model")
   baseTokens  Int?    @map("base_tokens")
   contextHint String? @map("context_hint")
 
   // Extended (Layer 3)
-  useCases    Json?   @map("use_cases")
-  targetRoles Json?   @map("target_roles")
-  license     String?
-  status      String  @default("active")
-  icon        String?
+  icon    String?
+  license String?
+  status  SkillStatus @default(PENDING)
 
+  // Relations
+  tags         SkillTag[]
+  tools        SkillTool[]
+  useCases     UseCase[]
+  targetRoles  TargetRole[]
+  qualityScore QualityScore?
+  reviews      Review[]
+  bookmarks    Bookmark[]
+  installs     Install[]
+
+  // Soft delete
+  deletedAt DateTime? @map("deleted_at")
+
+  // Timestamps
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  author   User       @relation(fields: [authorId], references: [id])
-  tags     SkillTag[]
-  ratings  Rating[]
-  ranking  Ranking?
-
+  @@unique([authorId, name])
+  @@unique([sourceOwner, sourceRepo, sourcePath])
+  @@index([status])
+  @@index([authorId])
+  @@index([createdAt])
+  @@index([deletedAt])
   @@map("skills")
 }
 
 // ============================================
-// Tags
+// Normalized Array Fields
 // ============================================
-model Tag {
-  id    String @id @default(uuid())
-  name  String @unique
-  count Int    @default(0)
 
+model Tag {
+  id     String     @id @default(cuid())
+  name   String     @unique
   skills SkillTag[]
 
   @@map("tags")
 }
 
-// ============================================
-// Skill-Tag Relation
-// ============================================
 model SkillTag {
   skillId String @map("skill_id")
   tagId   String @map("tag_id")
-
-  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
-  tag   Tag   @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  tag     Tag    @relation(fields: [tagId], references: [id])
 
   @@id([skillId, tagId])
+  @@index([tagId])
   @@map("skill_tags")
 }
 
-// ============================================
-// Ratings
-// ============================================
-model Rating {
-  id        String   @id @default(uuid())
-  skillId   String   @map("skill_id")
-  userId    String   @map("user_id")
-  score     Int // 1-5
-  comment   String?
-  createdAt DateTime @default(now()) @map("created_at")
+model Tool {
+  id         String      @id @default(cuid())
+  name       String      @unique
+  skillTools SkillTool[]
 
-  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
-  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@map("tools")
+}
 
-  @@unique([skillId, userId])
-  @@map("ratings")
+model SkillTool {
+  skillId  String  @map("skill_id")
+  toolId   String  @map("tool_id")
+  required Boolean @default(true)
+  skill    Skill   @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  tool     Tool    @relation(fields: [toolId], references: [id])
+
+  @@id([skillId, toolId])
+  @@map("skill_tools")
+}
+
+model UseCase {
+  id      String @id @default(cuid())
+  skillId String @map("skill_id")
+  content String
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@index([skillId])
+  @@map("use_cases")
+}
+
+model TargetRole {
+  id      String @id @default(cuid())
+  skillId String @map("skill_id")
+  role    String
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+
+  @@index([skillId])
+  @@map("target_roles")
 }
 
 // ============================================
-// Rankings (computed, cached)
+// Quality Score
 // ============================================
-model Ranking {
-  skillId    String   @id @map("skill_id")
-  eloScore   Int      @default(1000) @map("elo_score")
-  rank       Int?
-  usageCount Int      @default(0) @map("usage_count")
-  avgRating  Float?   @map("avg_rating")
-  updatedAt  DateTime @updatedAt @map("updated_at")
 
-  skill Skill @relation(fields: [skillId], references: [id], onDelete: Cascade)
+model QualityScore {
+  id      String @id @default(cuid())
+  skillId String @unique @map("skill_id")
+  skill   Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
 
-  @@map("rankings")
+  // Score breakdown (per PRD v0.3)
+  coreFieldScore    Int @map("core_field_score")    // /25
+  descriptionScore  Int @map("description_score")   // /20
+  runtimeScore      Int @map("runtime_score")       // /15
+  resourcesScore    Int @map("resources_score")     // /15
+  useCasesScore     Int @map("use_cases_score")     // /15
+  dependenciesScore Int @map("dependencies_score")  // /10
+
+  // Total & Grade
+  totalScore Int   @map("total_score") // /100
+  grade      Grade
+
+  // AI Analysis
+  analysisComment String?  @map("analysis_comment") @db.Text
+  improvementTips String[] @map("improvement_tips")
+
+  // Timestamp
+  analyzedAt DateTime @default(now()) @map("analyzed_at")
+
+  @@index([totalScore])
+  @@index([grade])
+  @@map("quality_scores")
+}
+
+// ============================================
+// Review
+// ============================================
+
+model Review {
+  id       String @id @default(cuid())
+  skillId  String @map("skill_id")
+  skill    Skill  @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  authorId String @map("author_id")
+  author   User   @relation(fields: [authorId], references: [id])
+
+  rating  Int     // 1-5 (CHECK constraint added via migration)
+  comment String? @db.Text
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([skillId, authorId]) // One review per user per skill
+  @@index([skillId])
+  @@index([createdAt])
+  @@map("reviews")
+}
+
+// ============================================
+// User Activity
+// ============================================
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  skillId   String   @map("skill_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill     Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, skillId])
+  @@index([userId])
+  @@map("bookmarks")
+}
+
+model Install {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  skillId   String   @map("skill_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  skill     Skill    @relation(fields: [skillId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, skillId])
+  @@index([userId])
+  @@index([skillId])
+  @@map("installs")
+}
+
+// ============================================
+// Enums
+// ============================================
+
+enum SkillStatus {
+  PENDING
+  ACTIVE
+  DEPRECATED
+  ARCHIVED
+}
+
+enum Grade {
+  S
+  A
+  B
+  C
+  D
 }
