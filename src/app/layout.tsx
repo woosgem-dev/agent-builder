@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { CommandPalette } from '@/components/common';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default function RootLayout({
         <div className="min-h-screen flex flex-col">
           {children}
         </div>
+        <CommandPalette />
       </body>
     </html>
   );

@@ -1,7 +1,12 @@
+'use client';
+
 import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
 import { SkillGrid } from '@/components/skill';
+import { Card, CardBody, Badge } from '@woosgem-dev/react';
 import Link from 'next/link';
+import { HeroSearch } from '@/components/common';
+import { Kbd } from '@woosgem-dev/react';
 
 // Mock data (will be replaced with API calls)
 const mockSkills = [
@@ -101,9 +106,9 @@ export default function HomePage() {
         <section className="bg-gradient-to-b from-purple-50 to-white px-4 py-16">
           <div className="mx-auto max-w-4xl text-center">
             {/* Value Proposition */}
-            <div className="mb-4 inline-block rounded-full bg-purple-100 px-4 py-1 text-sm font-medium text-purple-700">
+            <Badge variant="subtle" color="primary" size="lg" className="mb-4">
               🎯 설치 전에 AI가 검증합니다
-            </div>
+            </Badge>
 
             <h1 className="mb-4 text-4xl font-bold text-gray-900">
               ⚡ SkillHub
@@ -114,30 +119,19 @@ export default function HomePage() {
 
             {/* Search */}
             <div className="mx-auto mb-8 max-w-xl">
-              <div className="flex items-center rounded-lg border bg-white p-2 shadow-sm">
-                <input
-                  type="text"
-                  placeholder="어떤 스킬을 찾으시나요?"
-                  className="flex-1 px-4 py-2 text-gray-900 placeholder-gray-400 focus:outline-none"
-                />
-                <button className="rounded-md bg-purple-600 px-4 py-2 font-medium text-white hover:bg-purple-700">
-                  검색
-                </button>
-              </div>
-              <p className="mt-2 text-sm text-gray-500">
-                💡 Tip: <kbd className="rounded bg-gray-100 px-1">⌘K</kbd>로 AI 추천 받기
+              <HeroSearch />
+              <p className="mt-3 text-sm text-gray-500">
+                💡 Tip: <Kbd>⌘K</Kbd>로 빠른 검색
               </p>
             </div>
 
             {/* Categories */}
             <div className="flex flex-wrap justify-center gap-2">
               {categories.map((cat) => (
-                <Link
-                  key={cat.id}
-                  href={`/skills?category=${cat.id}`}
-                  className="rounded-full border bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:border-purple-300 hover:bg-purple-50"
-                >
-                  {cat.icon} {cat.label}
+                <Link key={cat.id} href={`/skills?category=${cat.id}`}>
+                  <Badge variant="outline" color="secondary" size="md" className="cursor-pointer hover:bg-gray-50">
+                    {cat.icon} {cat.label}
+                  </Badge>
                 </Link>
               ))}
             </div>
@@ -177,27 +171,33 @@ export default function HomePage() {
           <div className="mx-auto max-w-4xl text-center">
             <h2 className="mb-8 text-2xl font-bold text-gray-900">🤖 어떻게 작동하나요?</h2>
             <div className="grid gap-6 md:grid-cols-3">
-              <div className="rounded-lg border bg-white p-6">
-                <div className="mb-4 text-4xl">🔍</div>
-                <h3 className="mb-2 font-semibold">1. 스킬 검색</h3>
-                <p className="text-sm text-gray-600">
-                  필요한 스킬을 검색하거나 AI에게 추천받으세요
-                </p>
-              </div>
-              <div className="rounded-lg border bg-white p-6">
-                <div className="mb-4 text-4xl">📊</div>
-                <h3 className="mb-2 font-semibold">2. 품질 확인</h3>
-                <p className="text-sm text-gray-600">
-                  AI가 분석한 품질 점수와 비용을 미리 확인하세요
-                </p>
-              </div>
-              <div className="rounded-lg border bg-white p-6">
-                <div className="mb-4 text-4xl">⚡</div>
-                <h3 className="mb-2 font-semibold">3. 바로 사용</h3>
-                <p className="text-sm text-gray-600">
-                  검증된 스킬을 안심하고 설치하세요
-                </p>
-              </div>
+              <Card variant="outlined" hoverable>
+                <CardBody className="text-center">
+                  <div className="mb-4 text-4xl">🔍</div>
+                  <h3 className="mb-2 font-semibold">1. 스킬 검색</h3>
+                  <p className="text-sm text-gray-600">
+                    필요한 스킬을 검색하거나 AI에게 추천받으세요
+                  </p>
+                </CardBody>
+              </Card>
+              <Card variant="outlined" hoverable>
+                <CardBody className="text-center">
+                  <div className="mb-4 text-4xl">📊</div>
+                  <h3 className="mb-2 font-semibold">2. 품질 확인</h3>
+                  <p className="text-sm text-gray-600">
+                    AI가 분석한 품질 점수와 비용을 미리 확인하세요
+                  </p>
+                </CardBody>
+              </Card>
+              <Card variant="outlined" hoverable>
+                <CardBody className="text-center">
+                  <div className="mb-4 text-4xl">⚡</div>
+                  <h3 className="mb-2 font-semibold">3. 바로 사용</h3>
+                  <p className="text-sm text-gray-600">
+                    검증된 스킬을 안심하고 설치하세요
+                  </p>
+                </CardBody>
+              </Card>
             </div>
           </div>
         </section>

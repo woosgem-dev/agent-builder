@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { Button, IconButton } from '@woosgem-dev/react';
 
 export function Header() {
   return (
@@ -23,18 +24,17 @@ export function Header() {
         </nav>
 
         {/* Actions */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           {/* Search (compact) */}
-          <button className="p-2 text-gray-600 hover:text-gray-900">
+          <IconButton variant="ghost" color="secondary" size="md" aria-label="검색">
             🔍
-          </button>
+          </IconButton>
 
           {/* Login */}
-          <Link
-            href="/auth/login"
-            className="px-4 py-2 bg-gray-900 text-white rounded-lg hover:bg-gray-800"
-          >
-            로그인
+          <Link href="/auth/login">
+            <Button variant="filled" color="primary" size="md">
+              로그인
+            </Button>
           </Link>
         </div>
       </div>

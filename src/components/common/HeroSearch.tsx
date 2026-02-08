@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { Input, Button } from '@woosgem-dev/react';
 
 export function HeroSearch() {
   const [query, setQuery] = useState('');
@@ -15,22 +16,18 @@ export function HeroSearch() {
   };
 
   return (
-    <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
-      <div className="relative">
-        <input
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="어떤 스킬을 찾고 계세요?"
-          className="w-full px-6 py-4 text-lg border rounded-full shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        <button
-          type="submit"
-          className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2 bg-blue-600 text-white rounded-full hover:bg-blue-700"
-        >
-          검색
-        </button>
-      </div>
+    <form onSubmit={handleSearch} className="flex gap-2">
+      <Input
+        variant="outline"
+        size="lg"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="어떤 스킬을 찾고 계세요?"
+        className="flex-1"
+      />
+      <Button type="submit" variant="filled" color="primary" size="lg">
+        검색
+      </Button>
     </form>
   );
 }
