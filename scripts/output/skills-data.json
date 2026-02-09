@@ -1,0 +1,169 @@
+{
+  "crawledAt": "2026-02-09T13:09:20.978Z",
+  "totalFound": 10,
+  "totalCrawled": 10,
+  "successful": 7,
+  "failed": 3,
+  "skills": [
+    {
+      "name": "find-skills",
+      "owner": "vercel-labs",
+      "repo": "skills",
+      "skillId": "find-skills",
+      "skillsShUrl": "https://skills.sh/vercel-labs/skills/find-skills",
+      "installs": 162200,
+      "frontmatter": {
+        "name": "find-skills",
+        "description": "Helps users discover and install agent skills when they ask questions like \"how do I do X\", \"find a skill for X\", \"is there a skill that can...\", or express interest in extending capabilities. This skill should be used when the user is looking for functionality that might exist as an installable skill."
+      },
+      "branch": "main",
+      "skillMdPath": "skills/find-skills/SKILL.md",
+      "skillMdFound": true
+    },
+    {
+      "name": "vercel-react-best-practices",
+      "owner": "vercel-labs",
+      "repo": "agent-skills",
+      "skillId": "vercel-react-best-practices",
+      "skillsShUrl": "https://skills.sh/vercel-labs/agent-skills/vercel-react-best-practices",
+      "installs": 110600,
+      "frontmatter": {
+        "name": "vercel-react-best-practices",
+        "description": "React and Next.js performance optimization guidelines from Vercel Engineering. This skill should be used when writing, reviewing, or refactoring React/Next.js code to ensure optimal performance patterns. Triggers on tasks involving React components, Next.js pages, data fetching, bundle optimization, or performance improvements.",
+        "license": "MIT",
+        "metadata": {
+          "author": "vercel",
+          "version": "1.0.0"
+        }
+      },
+      "branch": "main",
+      "skillMdPath": "skills/react-best-practices/SKILL.md",
+      "skillMdFound": true
+    },
+    {
+      "name": "web-design-guidelines",
+      "owner": "vercel-labs",
+      "repo": "agent-skills",
+      "skillId": "web-design-guidelines",
+      "skillsShUrl": "https://skills.sh/vercel-labs/agent-skills/web-design-guidelines",
+      "installs": 83700,
+      "frontmatter": {
+        "name": "web-design-guidelines",
+        "description": "Review UI code for Web Interface Guidelines compliance. Use when asked to \"review my UI\", \"check accessibility\", \"audit design\", \"review UX\", or \"check my site against best practices\".",
+        "metadata": {
+          "author": "vercel",
+          "version": "1.0.0",
+          "argument-hint": "<file-or-pattern>"
+        }
+      },
+      "branch": "main",
+      "skillMdPath": "skills/web-design-guidelines/SKILL.md",
+      "skillMdFound": true
+    },
+    {
+      "name": "remotion-best-practices",
+      "owner": "remotion-dev",
+      "repo": "skills",
+      "skillId": "remotion-best-practices",
+      "skillsShUrl": "https://skills.sh/remotion-dev/skills/remotion-best-practices",
+      "installs": 77200,
+      "frontmatter": null,
+      "skillMdFound": false,
+      "error": "SKILL.md not found in any expected location/branch"
+    },
+    {
+      "name": "frontend-design",
+      "owner": "anthropics",
+      "repo": "skills",
+      "skillId": "frontend-design",
+      "skillsShUrl": "https://skills.sh/anthropics/skills/frontend-design",
+      "installs": 53300,
+      "frontmatter": {
+        "name": "frontend-design",
+        "description": "Create distinctive, production-grade frontend interfaces with high design quality. Use this skill when the user asks to build web components, pages, artifacts, posters, or applications (examples include websites, landing pages, dashboards, React components, HTML/CSS layouts, or when styling/beautifying any web UI). Generates creative, polished code and UI design that avoids generic AI aesthetics.",
+        "license": "Complete terms in LICENSE.txt"
+      },
+      "branch": "main",
+      "skillMdPath": "skills/frontend-design/SKILL.md",
+      "skillMdFound": true
+    },
+    {
+      "name": "vercel-composition-patterns",
+      "owner": "vercel-labs",
+      "repo": "agent-skills",
+      "skillId": "vercel-composition-patterns",
+      "skillsShUrl": "https://skills.sh/vercel-labs/agent-skills/vercel-composition-patterns",
+      "installs": 30100,
+      "frontmatter": {
+        "name": "vercel-composition-patterns",
+        "description": "React composition patterns that scale. Use when refactoring components with boolean prop proliferation, building flexible component libraries, or designing reusable APIs. Triggers on tasks involving compound components, render props, context providers, or component architecture. Includes React 19 API changes.",
+        "license": "MIT",
+        "metadata": {
+          "author": "vercel",
+          "version": "1.0.0"
+        }
+      },
+      "branch": "main",
+      "skillMdPath": "skills/composition-patterns/SKILL.md",
+      "skillMdFound": true
+    },
+    {
+      "name": "agent-browser",
+      "owner": "vercel-labs",
+      "repo": "agent-browser",
+      "skillId": "agent-browser",
+      "skillsShUrl": "https://skills.sh/vercel-labs/agent-browser/agent-browser",
+      "installs": 27100,
+      "frontmatter": null,
+      "skillMdFound": false,
+      "error": "SKILL.md not found in any expected location/branch"
+    },
+    {
+      "name": "skill-creator",
+      "owner": "anthropics",
+      "repo": "skills",
+      "skillId": "skill-creator",
+      "skillsShUrl": "https://skills.sh/anthropics/skills/skill-creator",
+      "installs": 26500,
+      "frontmatter": {
+        "name": "skill-creator",
+        "description": "Guide for creating effective skills. This skill should be used when users want to create a new skill (or update an existing skill) that extends Claude's capabilities with specialized knowledge, workflows, or tool integrations.",
+        "license": "Complete terms in LICENSE.txt"
+      },
+      "branch": "main",
+      "skillMdPath": "skills/skill-creator/SKILL.md",
+      "skillMdFound": true
+    },
+    {
+      "name": "browser-use",
+      "owner": "browser-use",
+      "repo": "browser-use",
+      "skillId": "browser-use",
+      "skillsShUrl": "https://skills.sh/browser-use/browser-use/browser-use",
+      "installs": 26000,
+      "frontmatter": null,
+      "skillMdFound": false,
+      "error": "SKILL.md not found in any expected location/branch"
+    },
+    {
+      "name": "vercel-react-native-skills",
+      "owner": "vercel-labs",
+      "repo": "agent-skills",
+      "skillId": "vercel-react-native-skills",
+      "skillsShUrl": "https://skills.sh/vercel-labs/agent-skills/vercel-react-native-skills",
+      "installs": 21900,
+      "frontmatter": {
+        "name": "vercel-react-native-skills",
+        "description": "React Native and Expo best practices for building performant mobile apps. Use when building React Native components, optimizing list performance, implementing animations, or working with native modules. Triggers on tasks involving React Native, Expo, mobile performance, or native platform APIs.",
+        "license": "MIT",
+        "metadata": {
+          "author": "vercel",
+          "version": "1.0.0"
+        }
+      },
+      "branch": "main",
+      "skillMdPath": "skills/react-native-skills/SKILL.md",
+      "skillMdFound": true
+    }
+  ]
+}

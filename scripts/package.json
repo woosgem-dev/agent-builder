@@ -1,0 +1,21 @@
+{
+  "name": "skills-crawler",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "crawl": "tsx crawl-skills.ts",
+    "crawl:dry": "tsx crawl-skills.ts --dry-run",
+    "crawl:limit": "tsx crawl-skills.ts --limit 5",
+    "crawl:top20": "tsx crawl-skills.ts --limit 20",
+    "test": "tsx test-parser.ts"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "tsx": "^4.7.0",
+    "yaml": "^2.4.0"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": ["esbuild"]
+  }
+}

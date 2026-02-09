@@ -1,0 +1,5 @@
+# Debug files from crawler
+debug-*.html
+debug-*.json
+
+# Keep skills-data.json and site-analysis.json as sample output
