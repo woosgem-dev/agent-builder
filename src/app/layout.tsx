@@ -1,10 +1,12 @@
 import type { Metadata } from 'next';
-import { CommandPalette } from '@/components/common';
+import { Inter } from 'next/font/google';
 import './globals.css';
 
+const inter = Inter({ subsets: ['latin'] });
+
 export const metadata: Metadata = {
-  title: 'SkillHub - AI 스킬 마켓플레이스',
-  description: 'AI 스킬의 GitHub — 누구나 쉽게 발견하고 사용',
+  title: 'Agent Builder - Find the right skills for your agents',
+  description: 'Discover and compose AI skills to build powerful agents. Powered by skills.sh ecosystem.',
 };
 
 export default function RootLayout({
@@ -13,12 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
-      <body>
-        <div className="min-h-screen flex flex-col">
-          {children}
-        </div>
-        <CommandPalette />
+    <html lang="ko" className="dark">
+      <body className={`${inter.className} antialiased`}>
+        {children}
       </body>
     </html>
   );

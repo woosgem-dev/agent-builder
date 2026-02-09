@@ -1,8 +1,8 @@
 {
-  "name": "skillhub",
+  "name": "agent-builder",
   "version": "0.1.0",
   "private": true,
-  "description": "AI 스킬의 GitHub — 누구나 쉽게 발견하고 사용",
+  "description": "Find the right skills and build powerful agents",
   "author": "woosgem-dev",
   "license": "MIT",
   "scripts": {
