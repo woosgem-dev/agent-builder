@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export interface ChatMessage {
   role: 'user' | 'assistant';
@@ -30,18 +30,11 @@ export interface ChatResponse {
 
 /**
  * POST /api/chat
- * AI conversation for agent building
- * - Generates agent configuration from natural language
- * - Recommends relevant skills based on context
+ * AI conversation for agent building (stub)
+ *
+ * TODO: Implement Claude API integration
  */
-export async function POST(request: NextRequest) {
-  const body = (await request.json()) as ChatRequest;
-
-  // TODO: Implement Claude API integration
-  // 1. Build system prompt with agent .md format + examples
-  // 2. Include skill candidates from DB if recommending
-  // 3. Parse response for form updates + conversation
-
+export function POST(): Response {
   return NextResponse.json<ChatResponse>({
     message: {
       role: 'assistant',

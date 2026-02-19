@@ -59,7 +59,7 @@ async function fetchWithTimeout(
   );
 
   try {
-    const response = await fetch(url, {
+    return await fetch(url, {
       ...options,
       signal: controller.signal,
       headers: {
@@ -69,7 +69,6 @@ async function fetchWithTimeout(
         ...options.headers,
       },
     });
-    return response;
   } finally {
     clearTimeout(timeoutId);
   }
@@ -109,25 +108,17 @@ export async function crawlSkillsShPage(
 
   // Extract skill links from HTML
   const skillLinks: Array<{ href: string; text: string }> = [];
+  const excludedPrefixes = ['/api/', '/auth/', '/settings/', '/about', '/docs', '/login', '/signup', '/search'];
 
   $('a[href]').each((_, el) => {
     const href = $(el).attr('href') || '';
     const text = $(el).text().trim();
 
-    // Pattern: /{owner}/{repo}/{skill-id}
-    if (href.match(/^\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/)) {
-      if (
-        !href.startsWith('/api/') &&
-        !href.startsWith('/auth/') &&
-        !href.startsWith('/settings/') &&
-        !href.startsWith('/about') &&
-        !href.startsWith('/docs') &&
-        !href.startsWith('/login') &&
-        !href.startsWith('/signup') &&
-        !href.startsWith('/search')
-      ) {
-        skillLinks.push({ href, text });
-      }
+    const isSkillPath = /^\/[a-zA-Z0-9_-]+\/[a-zA-Z0-9_-]+/.test(href);
+    const isExcluded = excludedPrefixes.some((prefix) => href.startsWith(prefix));
+
+    if (isSkillPath && !isExcluded) {
+      skillLinks.push({ href, text });
     }
   });
 

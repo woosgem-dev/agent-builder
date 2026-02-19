@@ -41,6 +41,16 @@ export async function syncSkillsToDb(
     const githubUrl = `https://github.com/${listing.owner}/${listing.repo}`;
 
     try {
+      const sharedData = {
+        name,
+        description,
+        url: listing.url,
+        githubUrl,
+        tags: tagsJson,
+        installs: listing.installs,
+        syncedAt: new Date(),
+      };
+
       await prisma.skillIndex.upsert({
         where: {
           owner_repo_skillId: {
@@ -49,26 +59,12 @@ export async function syncSkillsToDb(
             skillId: listing.skillId,
           },
         },
-        update: {
-          name,
-          description,
-          url: listing.url,
-          githubUrl,
-          tags: tagsJson,
-          installs: listing.installs,
-          syncedAt: new Date(),
-        },
+        update: sharedData,
         create: {
-          name,
-          description,
+          ...sharedData,
           owner: listing.owner,
           repo: listing.repo,
           skillId: listing.skillId,
-          url: listing.url,
-          githubUrl,
-          tags: tagsJson,
-          installs: listing.installs,
-          syncedAt: new Date(),
         },
       });
 

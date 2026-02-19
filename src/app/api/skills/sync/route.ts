@@ -15,19 +15,10 @@ import type { SyncResult } from '@/types/skill';
  */
 export async function POST(request: NextRequest): Promise<NextResponse<SyncResult>> {
   try {
-    // 1. Parse options from request body (all optional)
-    let limit: number | undefined;
-    let offset: number | undefined;
+    const body = await request.json().catch(() => ({}));
+    const limit = typeof body.limit === 'number' ? body.limit : undefined;
+    const offset = typeof body.offset === 'number' ? body.offset : undefined;
 
-    try {
-      const body = await request.json();
-      if (typeof body.limit === 'number') limit = body.limit;
-      if (typeof body.offset === 'number') offset = body.offset;
-    } catch {
-      // No body or invalid JSON - use defaults
-    }
-
-    // 2. Crawl skills.sh and fetch SKILL.md frontmatter
     const crawledSkills = await crawlAndFetchAll({ limit, offset });
 
     if (crawledSkills.length === 0) {
@@ -40,7 +31,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncResul
       });
     }
 
-    // 3. Upsert into database
     const result = await syncSkillsToDb(crawledSkills);
 
     return NextResponse.json(result);
