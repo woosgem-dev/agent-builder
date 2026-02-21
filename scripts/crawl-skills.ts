@@ -699,24 +699,28 @@ async function fetchSkillMd(
       }
     }
 
-    // Last resort: use GitHub API to search for SKILL.md in the repo
-    if (skillId) {
-      try {
-        const apiUrl = `https://api.github.com/search/code?q=filename:SKILL.md+repo:${owner}/${repo}+path:${skillId}`;
-        const response = await fetchWithTimeout(apiUrl, {
-          headers: {
-            Accept: "application/vnd.github.v3+json",
-            "User-Agent": CONFIG.userAgent,
-          },
-        });
+  }
 
-        if (response.ok) {
-          const data = (await response.json()) as {
-            items?: Array<{ path: string }>;
-          };
+  // Last resort: use GitHub API to search for SKILL.md in the repo
+  // Runs once after all branches are exhausted
+  if (skillId) {
+    try {
+      const apiUrl = `https://api.github.com/search/code?q=filename:SKILL.md+repo:${owner}/${repo}+path:${skillId}`;
+      const response = await fetchWithTimeout(apiUrl, {
+        headers: {
+          Accept: "application/vnd.github.v3+json",
+          "User-Agent": CONFIG.userAgent,
+        },
+      });
 
-          if (data.items && data.items.length > 0) {
-            const foundPath = data.items[0].path;
+      if (response.ok) {
+        const data = (await response.json()) as {
+          items?: Array<{ path: string }>;
+        };
+
+        if (data.items && data.items.length > 0) {
+          const foundPath = data.items[0].path;
+          for (const branch of CONFIG.branches) {
             const rawUrl = `${CONFIG.githubRawBase}/${owner}/${repo}/${branch}/${foundPath}`;
             const rawResponse = await fetchWithTimeout(rawUrl, {
               headers: { Accept: "text/plain", "User-Agent": CONFIG.userAgent },
@@ -730,9 +734,9 @@ async function fetchSkillMd(
             }
           }
         }
-      } catch {
-        // GitHub API search may fail due to rate limits
       }
+    } catch {
+      // GitHub API search may fail due to rate limits
     }
   }
 

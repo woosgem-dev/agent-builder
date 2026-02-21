@@ -3,6 +3,8 @@ import { crawlAndFetchAll } from '@/lib/crawler';
 import { syncSkillsToDb } from '@/lib/skill-sync';
 import type { SyncResult } from '@/types/skill';
 
+let syncInProgress = false;
+
 /**
  * POST /api/skills/sync
  * Trigger crawling pipeline: skills.sh -> GitHub SKILL.md -> DB upsert
@@ -13,7 +15,16 @@ import type { SyncResult } from '@/types/skill';
  * Response:
  *   { synced, failed, total, errors, message }
  */
-export async function POST(request: NextRequest): Promise<NextResponse<SyncResult>> {
+export async function POST(request: NextRequest): Promise<NextResponse<SyncResult | { error: string }>> {
+  if (syncInProgress) {
+    return NextResponse.json(
+      { error: 'Sync already in progress' } as { error: string },
+      { status: 409 },
+    );
+  }
+
+  syncInProgress = true;
+
   try {
     const body = await request.json().catch(() => ({}));
     const limit = typeof body.limit === 'number' ? body.limit : undefined;
@@ -32,7 +43,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncResul
     }
 
     const result = await syncSkillsToDb(crawledSkills);
-
     return NextResponse.json(result);
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
@@ -46,5 +56,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<SyncResul
       },
       { status: 500 },
     );
+  } finally {
+    syncInProgress = false;
   }
 }

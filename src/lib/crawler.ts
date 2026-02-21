@@ -155,7 +155,7 @@ export async function crawlSkillsShPage(
 /**
  * Parse skill links extracted from HTML into RawSkillListing objects.
  */
-function parseSkillLinks(
+export function parseSkillLinks(
   links: Array<{ href: string; text: string }>,
 ): RawSkillListing[] {
   const skills: RawSkillListing[] = [];
@@ -411,11 +411,16 @@ export async function fetchSkillFrontmatter(
         if (response.ok) {
           const content = await response.text();
           const frontmatter = parseFrontmatter(content);
-          return { frontmatter, branch, path: filePath };
+          if (frontmatter !== null) {
+            return { frontmatter, branch, path: filePath };
+          }
         }
       } catch {
         // Expected for branches/paths that don't exist
       }
+
+      // Rate limit inner requests to prevent burst
+      await sleep(200);
     }
   }
 

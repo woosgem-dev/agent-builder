@@ -104,7 +104,7 @@ export async function GET(request: NextRequest) {
       installs: row.installs,
     }));
 
-    const totalPages = Math.ceil(total / limit);
+    const totalPages = total === 0 ? 1 : Math.ceil(total / limit);
 
     return NextResponse.json<SkillSearchResponse>({
       skills,
