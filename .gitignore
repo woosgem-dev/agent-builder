@@ -25,6 +25,7 @@ yarn-error.log*
 # local env files
 .env
 .env*.local
+.npmrc
 
 # vercel
 .vercel
@@ -37,11 +38,13 @@ next-env.d.ts
 prisma/dev.db
 prisma/dev.db-journal
 
-# IDE
+# IDE / tooling
 .idea/
 .vscode/
 *.swp
 *.swo
+.mcp.json
+.ts-mcp/
 
 # worktrees
 .worktrees/

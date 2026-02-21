@@ -8,8 +8,9 @@ Agent Builder is a Next.js 14 (App Router) web app for assembling Claude Code ag
 
 ## Rules 
 MUST FOLLOW THESE RULES:
+- run `simplify code` on any code changes
 - run `pnpm lint` and `pnpm build` after changing any code
-- 
+
 
 ## Commands
 
@@ -31,7 +32,7 @@ npx tsx scripts/test-parser.ts               # Test YAML frontmatter parser
 - **Package manager**: pnpm
 - **Database**: SQLite via Prisma (`prisma/schema.prisma`)
 - **AI**: Anthropic SDK (`@anthropic-ai/sdk`) — chat API not yet implemented
-- **Styling**: SASS modules (`src/styles/*.module.scss`) + linked design system (`@woosgem-dev/styles`, `@woosgem-dev/react` from `../woosgem/packages/`)
+- **Styling**: SASS modules (`src/styles/*.module.scss`) + design system (`@woosgem-dev/styles`, `@woosgem-dev/react` via GitHub Packages)
 - **Validation**: Zod (`src/lib/schemas.ts`)
 - **Crawling**: Cheerio + YAML parser
 
@@ -69,7 +70,7 @@ skills.sh (HTML) → Crawler → SKILL.md (GitHub raw) → Prisma (SQLite) → A
 
 ### External Dependencies
 
-The design system packages (`@woosgem-dev/react`, `@woosgem-dev/styles`) are locally linked from `../woosgem/packages/`. The woosgem repo must be present as a sibling directory.
+The design system packages (`@woosgem-dev/react`, `@woosgem-dev/styles`) are installed from GitHub Packages (`npm.pkg.github.com`). Auth token is configured in `.npmrc` (gitignored).
 
 ### Scripts Directory
 
