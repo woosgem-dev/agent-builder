@@ -43,6 +43,9 @@ prisma/dev.db-journal
 *.swp
 *.swo
 
+# worktrees
+.worktrees/
+
 # crawler output (debug files)
 scripts/output/debug-*.html
 scripts/output/site-analysis.json
