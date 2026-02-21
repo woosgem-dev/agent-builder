@@ -23,8 +23,8 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
     "@prisma/client": "^6.3.0",
-    "@woosgem-dev/react": "link:../../../woosgem/packages/ds-react",
-    "@woosgem-dev/styles": "link:../../../woosgem/packages/ds-styles",
+    "@woosgem-dev/react": "link:../woosgem/packages/ds-react",
+    "@woosgem-dev/styles": "link:../woosgem/packages/ds-styles",
     "cheerio": "^1.2.0",
     "next": "14.2.23",
     "react": "^18.3.1",
